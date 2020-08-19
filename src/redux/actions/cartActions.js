@@ -5,44 +5,51 @@ const {
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
   CART_ADD_ID,
+  CART_ITEMS_REQUEST,
 } = require("../constants/cartConstants");
 
-const addToCart = (productId, quantity) => async (dispatch, getState) => {
+const addToCart = (cartId, productId, quantity) => async (
+  dispatch,
+  getState
+) => {
   try {
     const { data } = await Axios.get("http://localhost:8080/item/" + productId);
-    //console.log(">>>2 data=" + JSON.stringify(data));
+    console.log(">>>cartActions.addToCart data=" + JSON.stringify(data));
     dispatch({
       type: CART_ADD_ITEM,
       payload: {
-        price: data.price,
-        description: data.description,
-        imageFile: data.imageFile,
-        productId: data.id,
-        quantity,
+        id: cartId,
+        cartItems: {
+          price: data.price,
+          description: data.description,
+          imageFile: data.imageFile,
+          itemId: data.id,
+          quantity,
+        },
       },
     });
-    const {
-      cart: { cartItems },
-    } = getState();
-    Cookie.set("cartItems", JSON.stringify(cartItems));
+
+    Cookie.set("cart", JSON.stringify(getState().cart));
   } catch (error) {}
 };
 
 const removeFromCart = (productId) => (dispatch, getState) => {
   dispatch({ type: CART_REMOVE_ITEM, payload: productId });
 
-  const {
-    cart: { cartItems },
-  } = getState();
-  Cookie.set("cartItems", JSON.stringify(cartItems));
+  const { cart } = getState();
+  Cookie.set("cart", JSON.stringify(cart));
 };
 
-// const addCartId = (cartId) => {
-//   dispatch({
-//     type: CART_ADD_ID,
-//     payload: cartId,
-//   });
+const getCart = () => (dispatch) => {
+  dispatch({ type: CART_ITEMS_REQUEST });
+};
 
-//   Cookie.set("cartId", JSON.stringify(cartId));
-// };
-export { addToCart, removeFromCart };
+const addCartId = (cartId) => (dispatch, getState) => {
+  console.log(">>>cartActions.addCartId cartId=" + cartId);
+  dispatch({
+    type: CART_ADD_ID,
+    payload: cartId,
+  });
+  console.log(">>>cartActions.addCartId state=" + JSON.stringify(getState()));
+};
+export { addToCart, removeFromCart, addCartId, getCart };

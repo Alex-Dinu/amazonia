@@ -1,16 +1,22 @@
 import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, removeFromCart } from "../redux/actions/cartActions";
+import {
+  addToCart,
+  removeFromCart,
+  addCartId,
+} from "../redux/actions/cartActions";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import Cookie from "js-cookie";
 
 function CartScreen(props) {
   const cart = useSelector((state) => state.cart);
+  console.log(">>>CartScreen cart=" + JSON.stringify(cart));
   const imageLocationPath = "../images/";
-  const { cartItems } = cart;
+  const cartItems = cart.cartItems;
+  //console.log(">>>cartItems=" + JSON.stringify(cartItems));
   const productId = props.match.params.id;
-  // Get the quantity from the query screen.
+  // Get the quantity from the query string.
   const quantity = props.location.search
     ? Number(props.location.search.split("=")[1])
     : 1;
@@ -18,44 +24,72 @@ function CartScreen(props) {
 
   useEffect(() => {
     if (productId) {
-      console.log(">>>3");
-      //console.log(">>>>useEffect pid = " + productId + "q=" + quantity);
-      dispatch(addToCart(productId, quantity));
-      console.log(">>>3.1");
-      updateCartDataStore();
+      const cart = Cookie.getJSON("cart") || [];
+      if (cart.id) {
+        dispatch(addToCart(cart.id, productId, quantity)).then(() => {
+          console.log(">>>CartScreen.useEffect");
+          updateCartDataStore();
+        });
+      } else {
+        const cartId = getNewCartId().then((cartId) => {
+          dispatch(addToCart(cartId, productId, quantity)).then(() => {
+            console.log(">>>CartScreen.useEffect");
+            updateCartDataStore();
+          });
+        });
+      }
     }
   }, []);
 
   const removeFromCartHandler = (productId) => {
-    console.log(">>>1");
-    dispatch(removeFromCart(productId));
-    console.log(">>>1.1");
-    updateCartDataStore();
+    dispatch(removeFromCart(productId)).then(() => {
+      updateCartDataStore();
+      console.log(">>>CartScreen.removeFromCartHandler");
+    });
   };
   const handleAddToCartClick = useCallback((productId, quantity) => {
     //console.log(">>>productId=" + productId + ", q=" + quantity);
-    console.log(">>>2");
-    dispatch(addToCart(productId, quantity));
-    console.log(">>>2.1");
-    updateCartDataStore();
+    dispatch(addToCart(productId, quantity)).then(() => {
+      updateCartDataStore();
+      console.log(">>>CartScreen.handleAddToCartClick");
+    });
   });
 
   const checkoutHandler = () => {
     props.history.push("/signin?redirect=shipping");
   };
 
+  async function getNewCartId() {
+    try {
+      const { data } = await Axios.post("http://localhost:8080/cart", {});
+      console.log(">>>CartScreen.getNewCartId cartid=" + data.id);
+      return data.id;
+      // const { data } = await Axios.post("http://localhost:8080/cart", {}).then(
+      //   (res) => {
+      //     console.log(">>>CartScreen.getNewCartId cartid=" + res.data.id);
+      //     return res.data.id;
+      //   }
+      // );
+    } catch (error) {
+      console.log(">>>CartScreen.updateCartDataStore error=" + error.message);
+    }
+  }
+
   const updateCartDataStore = () => {
-    const cartItems = Cookie.getJSON("cartItems") || [];
-    const cartData = { cartItems: cartItems };
+    const cart = Cookie.getJSON("cart") || [];
+    const cartRequest = {
+      id: cart.id,
+      cartItems: cart.cartItems,
+    };
+
     console.log(
-      ">>>CartScreen.updateCartDataStore cartData=" + JSON.stringify(cartData)
+      ">>>CartScreen.updateCartDataStore cartData=" +
+        JSON.stringify({ cartRequest })
     );
     try {
-      const { data } = Axios.post("http://localhost:8080/cart", {
-        cartData,
-      }).then((res) => console.log(">>>res=" + JSON.stringify(res)));
+      const { data } = Axios.post("http://localhost:8080/cart", cart);
     } catch (error) {
-      console.log(">>>error=" + error.message);
+      console.log(">>>CartScreen.updateCartDataStore error=" + error.message);
     }
   };
 
