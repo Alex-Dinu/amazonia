@@ -6,6 +6,7 @@ const {
   CART_REMOVE_ITEM,
   CART_ADD_ID,
   CART_ITEMS_REQUEST,
+  CART_SAVE_SHIPPING,
 } = require("../constants/cartConstants");
 
 const addToCart = (cartId, productId, quantity) => async (
@@ -52,4 +53,9 @@ const addCartId = (cartId) => (dispatch, getState) => {
   });
   console.log(">>>cartActions.addCartId state=" + JSON.stringify(getState()));
 };
-export { addToCart, removeFromCart, addCartId, getCart };
+
+const saveShipping = (data) => (dispatch) => {
+  dispatch({ type: CART_SAVE_SHIPPING, payload: data });
+};
+
+export { addToCart, removeFromCart, addCartId, getCart, saveShipping };

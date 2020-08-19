@@ -1,13 +1,10 @@
 import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addToCart,
-  removeFromCart,
-  addCartId,
-} from "../redux/actions/cartActions";
-import { Link } from "react-router-dom";
+import { addToCart, removeFromCart } from "../redux/actions/cartActions";
+import { Redirect } from "react-router-dom";
 import Axios from "axios";
 import Cookie from "js-cookie";
+import Cart from "../components/Cart";
 
 function CartScreen(props) {
   const cart = useSelector((state) => state.cart);
@@ -31,7 +28,7 @@ function CartScreen(props) {
           updateCartDataStore();
         });
       } else {
-        const cartId = getNewCartId().then((cartId) => {
+        getNewCartId().then((cartId) => {
           dispatch(addToCart(cartId, productId, quantity)).then(() => {
             console.log(">>>CartScreen.useEffect");
             updateCartDataStore();
@@ -56,7 +53,9 @@ function CartScreen(props) {
   });
 
   const checkoutHandler = () => {
-    props.history.push("/signin?redirect=shipping");
+    //console.log(">>>CartScreen.checkoutHandler Im in");
+    //return <Redirect push to="/shipping/" />;
+    props.history.push("/shipping/");
   };
 
   async function getNewCartId() {
@@ -64,12 +63,6 @@ function CartScreen(props) {
       const { data } = await Axios.post("http://localhost:8080/cart", {});
       console.log(">>>CartScreen.getNewCartId cartid=" + data.id);
       return data.id;
-      // const { data } = await Axios.post("http://localhost:8080/cart", {}).then(
-      //   (res) => {
-      //     console.log(">>>CartScreen.getNewCartId cartid=" + res.data.id);
-      //     return res.data.id;
-      //   }
-      // );
     } catch (error) {
       console.log(">>>CartScreen.updateCartDataStore error=" + error.message);
     }
@@ -87,75 +80,20 @@ function CartScreen(props) {
         JSON.stringify({ cartRequest })
     );
     try {
-      const { data } = Axios.post("http://localhost:8080/cart", cart);
+      Axios.post("http://localhost:8080/cart", cart);
     } catch (error) {
       console.log(">>>CartScreen.updateCartDataStore error=" + error.message);
     }
   };
 
   return (
-    <div className="cart">
-      <div className="cart-list">
-        <ul className="cart-list-container">
-          <li>
-            <h3>Shopping Cart</h3>
-            <div>Price</div>
-          </li>
-          {cartItems.length === 0 ? (
-            <div>Cart is empty</div>
-          ) : (
-            cartItems.map((item) => (
-              <li>
-                <div className="cart-image">
-                  <img src={imageLocationPath + item.imageFile} alt="product" />
-                </div>
-                <div className="cart-name">
-                  <div>
-                    <Link to={"/product/" + item.Id}>{item.description}</Link>
-                  </div>
-                  <div>
-                    Qty:
-                    <select
-                      value={item.quantity}
-                      onChange={(e) => {
-                        handleAddToCartClick(item.product, e.target.value);
-                      }}
-                    >
-                      {[...Array(5).keys()].map((x) => (
-                        <option key={x + 1} value={x + 1}>
-                          {x + 1}
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      type="button"
-                      className="button"
-                      onClick={() => removeFromCartHandler(item.product)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-                <div className="cart-price">${item.price}</div>
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
-      <div className="cart-action">
-        <h3>
-          Subtotal ( {cartItems.reduce((a, c) => a + c.quantity, 0)} items) : ${" "}
-          {cartItems.reduce((a, c) => a + c.price * c.quantity, 0)}
-        </h3>
-        <button
-          onClick={checkoutHandler}
-          className="button primary full-width"
-          disabled={cartItems.length === 0}
-        >
-          Proceed to Checkout
-        </button>
-      </div>
-    </div>
+    <Cart
+      cartItems={cartItems}
+      imageLocationPath={imageLocationPath}
+      onQuantityChange={handleAddToCartClick}
+      onDeleteItemClick={removeFromCartHandler}
+      onCheckOutClick={checkoutHandler}
+    ></Cart>
   );
 }
 

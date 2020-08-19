@@ -3,11 +3,13 @@ const {
   CART_REMOVE_ITEM,
   CART_ADD_ID,
   CART_ITEMS_REQUEST,
+  CART_SAVE_SHIPPING,
 } = require("../constants/cartConstants");
 
 const initialState = {
   id: "",
   cartItems: [],
+  shipping: {},
 };
 
 function cartReducer(state = { initialState }, action) {
@@ -16,7 +18,9 @@ function cartReducer(state = { initialState }, action) {
       const item = action.payload;
 
       // Find the product in the state cart.
-      const product = state.cartItems.find((p) => p.itemId === item.cartItems.itemId);
+      const product = state.cartItems.find(
+        (p) => p.itemId === item.cartItems.itemId
+      );
       if (product) {
         // if item is found in the cart, update it with the quantity.
         //console.log(">>>cartReducer existing product");
@@ -45,6 +49,9 @@ function cartReducer(state = { initialState }, action) {
 
     case CART_ADD_ID:
       return { ...state, cartId: action.payload };
+
+    case CART_SAVE_SHIPPING:
+      return { ...state, shipping: action.payload };
 
     default:
       return state;
