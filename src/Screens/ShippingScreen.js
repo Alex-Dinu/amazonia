@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 import CheckoutSteps from "../components/CheckoutSteps";
 import { saveShipping } from "../redux/actions/cartActions";
+import { useSetFocus } from "../customHooks/useSetFocus";
 
 function ShippingScreen(props) {
   const [address, setAddress] = useState("");
@@ -11,6 +12,9 @@ function ShippingScreen(props) {
   const [state, setState] = useState("");
   const [country, setCountry] = useState("");
   const dispatch = useDispatch();
+  const addressRef = useRef(null);
+
+  useSetFocus(addressRef);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -33,6 +37,7 @@ function ShippingScreen(props) {
                 type="text"
                 name="address"
                 id="address"
+                ref={addressRef}
                 onChange={(e) => setAddress(e.target.value)}
               ></input>
             </li>
