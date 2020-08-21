@@ -9,7 +9,7 @@ import ShippingScreen from "./Screens/ShippingScreen";
 import PaymentScreen from "./Screens/PaymentScreen";
 import PlaceOrderScreen from "./Screens/PlaceOrderScreen";
 import OrderScreen from "./Screens/OrderScreen";
-
+//https://youtu.be/Fy9SdZLBTOo
 function App() {
   const openMenu = () => {
     document.querySelector(".sidebar").classList.add("open");
@@ -37,11 +37,11 @@ function App() {
             x
           </button>
           <ul className="categories">
-            <li>
+            <li key="food">
               <a href="index.html">Food</a>
             </li>
 
-            <li>
+            <li key="clothing">
               <a href="index.html">Clothing</a>
             </li>
           </ul>

@@ -1,12 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import ProductImage from "./ProductImage";
+import PropTypes from "prop-types";
+
 function Product(props) {
   const { product, loading, error } = props.productDetails;
   return (
     <div>
       <div className="back-to-result">
-        <Link to="/">Back to result</Link>
+        <Link to="/">Back to items</Link>
       </div>
       {loading ? (
         <div>Loading...</div>
@@ -64,4 +66,8 @@ function Product(props) {
     </div>
   );
 }
+
 export default Product;
+Product.prototypes = {
+  qqq: PropTypes.bool.isRequired,
+};

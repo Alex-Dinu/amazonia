@@ -1,14 +1,13 @@
 import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../redux/actions/cartActions";
-import { Redirect } from "react-router-dom";
 import Axios from "axios";
 import Cookie from "js-cookie";
 import Cart from "../components/Cart";
 
 function CartScreen(props) {
   const cart = useSelector((state) => state.cart);
-  console.log(">>>CartScreen cart=" + JSON.stringify(cart));
+  //console.log(">>>CartScreen cart=" + JSON.stringify(cart));
   const imageLocationPath = "../images/";
   const cartItems = cart.cartItems;
   //console.log(">>>cartItems=" + JSON.stringify(cartItems));
@@ -24,13 +23,13 @@ function CartScreen(props) {
       const cart = Cookie.getJSON("cart") || [];
       if (cart.id) {
         dispatch(addToCart(cart.id, productId, quantity)).then(() => {
-          console.log(">>>CartScreen.useEffect");
+          //console.log(">>>CartScreen.useEffect");
           updateCartDataStore();
         });
       } else {
         getNewCartId().then((cartId) => {
           dispatch(addToCart(cartId, productId, quantity)).then(() => {
-            console.log(">>>CartScreen.useEffect");
+            //console.log(">>>CartScreen.useEffect");
             updateCartDataStore();
           });
         });
@@ -41,14 +40,14 @@ function CartScreen(props) {
   const removeFromCartHandler = (productId) => {
     dispatch(removeFromCart(productId)).then(() => {
       updateCartDataStore();
-      console.log(">>>CartScreen.removeFromCartHandler");
+      //console.log(">>>CartScreen.removeFromCartHandler");
     });
   };
   const handleAddToCartClick = useCallback((productId, quantity) => {
     //console.log(">>>productId=" + productId + ", q=" + quantity);
     dispatch(addToCart(productId, quantity)).then(() => {
       updateCartDataStore();
-      console.log(">>>CartScreen.handleAddToCartClick");
+      // console.log(">>>CartScreen.handleAddToCartClick");
     });
   });
 
@@ -61,28 +60,20 @@ function CartScreen(props) {
   async function getNewCartId() {
     try {
       const { data } = await Axios.post("http://localhost:8080/cart", {});
-      console.log(">>>CartScreen.getNewCartId cartid=" + data.id);
+      //console.log(">>>CartScreen.getNewCartId cartid=" + data.id);
       return data.id;
     } catch (error) {
-      console.log(">>>CartScreen.updateCartDataStore error=" + error.message);
+      //.log(">>>CartScreen.updateCartDataStore error=" + error.message);
     }
   }
 
   const updateCartDataStore = () => {
     const cart = Cookie.getJSON("cart") || [];
-    const cartRequest = {
-      id: cart.id,
-      cartItems: cart.cartItems,
-    };
 
-    console.log(
-      ">>>CartScreen.updateCartDataStore cartData=" +
-        JSON.stringify({ cartRequest })
-    );
     try {
       Axios.post("http://localhost:8080/cart", cart);
     } catch (error) {
-      console.log(">>>CartScreen.updateCartDataStore error=" + error.message);
+      //console.log(">>>CartScreen.updateCartDataStore error=" + error.message);
     }
   };
 

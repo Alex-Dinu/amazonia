@@ -5,7 +5,7 @@ import Product from "../components/Product";
 
 function ProductScreen(props) {
   const [qty, setQty] = useState(1);
-  const productDetails = useSelector((state) => state.productDetails);
+  //const productDetails = useSelector((state) => state.productDetails);
   const dispatch = useDispatch();
   const imageLocationPath = "../images/";
 
@@ -21,7 +21,7 @@ function ProductScreen(props) {
 
   return (
     <Product
-      productDetails={productDetails}
+      productDetails={useSelector((state) => state.productDetails)}
       imageLocationPath={imageLocationPath}
       onQuantityChange={setQty}
       onAddToCartClick={handleAddToCart}

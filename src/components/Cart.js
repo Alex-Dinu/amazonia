@@ -1,12 +1,14 @@
 import React from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ProductImage from "./ProductImage";
+import PropTypes from "prop-types";
+
 function Cart(props) {
   return (
     <div className="cart">
       <div className="cart-list">
         <ul className="cart-list-container">
-          <li>
+          <li key="z">
             <h3>Shopping Cart</h3>
             <div>Price</div>
           </li>
@@ -14,7 +16,7 @@ function Cart(props) {
             <div>Cart is empty</div>
           ) : (
             props.cartItems.map((item) => (
-              <li>
+              <li key={item.Id}>
                 <ProductImage
                   className={"cart-image"}
                   imageSource={props.imageLocationPath + item.imageFile}
@@ -70,4 +72,13 @@ function Cart(props) {
     </div>
   );
 }
+
+Cart.prototypes = {
+  imageLocationPath: PropTypes.string.isRequired,
+  onQuantityChange: PropTypes.func,
+  onDeleteItemClick: PropTypes.func,
+  onCheckOutClick: PropTypes.func,
+  qqq: PropTypes.string.isRequired,
+};
+
 export default Cart;

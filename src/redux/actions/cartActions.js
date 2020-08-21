@@ -15,7 +15,7 @@ const addToCart = (cartId, productId, quantity) => async (
 ) => {
   try {
     const { data } = await Axios.get("http://localhost:8080/item/" + productId);
-    console.log(">>>cartActions.addToCart data=" + JSON.stringify(data));
+    //console.log(">>>cartActions.addToCart data=" + JSON.stringify(data));
     dispatch({
       type: CART_ADD_ITEM,
       payload: {
@@ -46,12 +46,12 @@ const getCart = () => (dispatch) => {
 };
 
 const addCartId = (cartId) => (dispatch, getState) => {
-  console.log(">>>cartActions.addCartId cartId=" + cartId);
+  //console.log(">>>cartActions.addCartId cartId=" + cartId);
   dispatch({
     type: CART_ADD_ID,
     payload: cartId,
   });
-  console.log(">>>cartActions.addCartId state=" + JSON.stringify(getState()));
+  //console.log(">>>cartActions.addCartId state=" + JSON.stringify(getState()));
 };
 
 const saveShipping = (data) => (dispatch) => {

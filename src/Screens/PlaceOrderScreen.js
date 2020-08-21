@@ -14,7 +14,7 @@ function PlaceOrderScreen(props) {
 
   const itemsPrice = cartItems.reduce((a, c) => a + c.price * c.quantity, 0);
   const shippingPrice = itemsPrice > 100 ? 0 : 10;
-  const taxPrice = tax * itemsPrice;
+  const taxPrice = (tax / 100) * itemsPrice;
   const totalPrice = itemsPrice + shippingPrice + taxPrice;
 
   // const setTaxRate = (state) => async () => {
@@ -34,7 +34,7 @@ function PlaceOrderScreen(props) {
         setTax(data.taxRate);
       }
     } catch (error) {
-      console.log(">>>CartScreen.updateCartDataStore error=" + error.message);
+      //console.log(">>>CartScreen.updateCartDataStore error=" + error.message);
     }
   }
 

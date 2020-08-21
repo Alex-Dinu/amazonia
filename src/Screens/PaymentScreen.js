@@ -1,5 +1,5 @@
 import React from "react";
-
+import PropTypes from "prop-types";
 import CheckoutSteps from "../components/CheckoutSteps";
 
 function PaymentScreen(props) {
@@ -25,7 +25,7 @@ function PaymentScreen(props) {
                   id="paymentMethod"
                   value="paypal"
                 ></input>
-                <label for="paymentMethod">Paypal</label>
+                <label htmlFor="paymentMethod">Paypal</label>
               </div>
             </li>
 
@@ -40,4 +40,8 @@ function PaymentScreen(props) {
     </div>
   );
 }
+
+PaymentScreen.propTypes = {
+  qqq: PropTypes.string.isRequired,
+};
 export default PaymentScreen;
