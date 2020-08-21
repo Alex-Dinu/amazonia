@@ -1,7 +1,7 @@
 # Shopping Cart
 
 
-This is a simple shopping cart application that communicates to a RESTfull service in the back-end.
+This is a simple shopping cart application that communicates to a [RESTfull service](https://github.com/Alex-Dinu/ShoppingCart-Java) in the back-end.
 # Features
 
   - [Redux](https://github.com/Alex-Dinu/amazonia/tree/master/src/redux) 
