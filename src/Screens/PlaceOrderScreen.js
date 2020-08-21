@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 //import { createOrder } from "../actions/orderActions";
 import CheckoutSteps from "../components/CheckoutSteps";
@@ -10,7 +10,7 @@ function PlaceOrderScreen(props) {
   const cart = useSelector((state) => state.cart);
   const [tax, setTax] = useState(0);
   const imageLocationPath = "../images/";
-  const { cartItems, shipping } = cart;
+  const { cartItems } = cart;
 
   const itemsPrice = cartItems.reduce((a, c) => a + c.price * c.quantity, 0);
   const shippingPrice = itemsPrice > 100 ? 0 : 10;

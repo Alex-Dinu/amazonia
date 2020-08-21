@@ -4,6 +4,7 @@ import { addToCart, removeFromCart } from "../redux/actions/cartActions";
 import Axios from "axios";
 import Cookie from "js-cookie";
 import Cart from "../components/Cart";
+import { getNewCartId } from "./cartRestCaller";
 
 function CartScreen(props) {
   const cart = useSelector((state) => state.cart);
@@ -57,15 +58,15 @@ function CartScreen(props) {
     props.history.push("/shipping/");
   };
 
-  async function getNewCartId() {
-    try {
-      const { data } = await Axios.post("http://localhost:8080/cart", {});
-      //console.log(">>>CartScreen.getNewCartId cartid=" + data.id);
-      return data.id;
-    } catch (error) {
-      //.log(">>>CartScreen.updateCartDataStore error=" + error.message);
-    }
-  }
+  // async function getNewCartId() {
+  //   try {
+  //     const { data } = await Axios.post("http://localhost:8080/cart", {});
+  //     //console.log(">>>CartScreen.getNewCartId cartid=" + data.id);
+  //     return data.id;
+  //   } catch (error) {
+  //     //.log(">>>CartScreen.updateCartDataStore error=" + error.message);
+  //   }
+  // }
 
   const updateCartDataStore = () => {
     const cart = Cookie.getJSON("cart") || [];
